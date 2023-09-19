@@ -1,0 +1,3 @@
+@mixin transition($delay) {
+  transition: all $delay ease;
+}
