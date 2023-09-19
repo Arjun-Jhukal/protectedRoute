@@ -14,3 +14,40 @@
   text-transform: uppercase;
   font-weight: 500;
 }
+
+.contained {
+  background-color: $success;
+  color: $white;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 5px;
+}
+
+.disabled {
+  background-color: #eee;
+  opacity: 0.7;
+  cursor: not-allowed;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 5px;
+  color: #aaa;
+}
+
+.text__field {
+  margin-bottom: 15px;
+
+  input {
+    &.error {
+      border-color: $error;
+    }
+  }
+
+  label {
+    &:first-child {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+  }
+}

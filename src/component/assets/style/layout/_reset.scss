@@ -23,6 +23,7 @@ button {
   background-color: transparent;
   border: none;
   outline: none;
+  cursor: pointer;
 }
 
 input,
@@ -30,11 +31,10 @@ textarea,
 select {
   outline: none;
   border: 1px solid #e7e7e7;
-  padding: 15px 20px;
+  padding: 10px 20px;
   border-radius: 5px;
   width: 100%;
   display: block;
-  margin-bottom: 8px;
 }
 
 label {

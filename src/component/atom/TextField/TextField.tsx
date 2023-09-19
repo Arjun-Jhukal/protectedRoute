@@ -8,10 +8,10 @@ interface Props {
   fieldType?: FieldType;
   inputType?: InputType;
   value?: string | number;
-  onChange?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   error?: boolean;
-  helperText?: string;
+  helperText?: string | undefined | false;
   rows?: number;
   options?: [];
   name?: string;
@@ -23,26 +23,36 @@ export default function TextField(props: Props) {
   switch (fieldType) {
     case "input":
       return (
-        <div className={error ? "text__field error" : "text__field"}>
+        <div className="text__field">
           {label ? <label>{label}</label> : null}
-          <input name={name} type={inputType} value={value} onChange={onChange} placeholder={placeholder || ""} />
-          {helperText ? <label>{helperText}</label> : null}
+          <input className={error ? "error" : ""} name={name} type={inputType} value={value} onChange={onChange} placeholder={placeholder || ""} />
+          {helperText ? <label className="error">{helperText}</label> : null}
         </div>
       );
     case "textarea":
       return (
-        <div className={error ? "text__field error" : "text__field"}>
+        <div className="text__field">
           {label ? <label>{label}</label> : null}
-          <textarea name={name} rows={rows} style={{ width: "100%" }} value={value} onChange={onChange} placeholder={placeholder || ""}></textarea>
-          {helperText ? <label>{helperText}</label> : null}
+          <textarea
+            className={error ? "error" : ""}
+            name={name}
+            rows={rows}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder || ""}
+          ></textarea>
+          {helperText ? <label className="error">{helperText}</label> : null}
         </div>
       );
 
     default:
       return (
         <div className="text__field">
-          <input type="text" value={value} onChange={onChange} placeholder={placeholder || ""} />
-          {helperText ? <label>{helperText}</label> : null}
+          {label ? <label>{label}</label> : null}
+
+          <input className={error ? "error" : ""} type={inputType} name={name} value={value} onChange={onChange} placeholder={placeholder || ""} />
+
+          {helperText ? <label className="error">{helperText}</label> : null}
         </div>
       );
   }

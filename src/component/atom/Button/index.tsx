@@ -10,7 +10,7 @@ interface Props {
 export default function Button(props: Props) {
   const { type, variant, onClick, isDisabled, value } = props;
   return (
-    <button type={type} className={variant} onClick={onClick} disabled={isDisabled}>
+    <button type={type} className={!isDisabled ? variant : "disabled"} onClick={onClick} disabled={isDisabled}>
       {value}
     </button>
   );
