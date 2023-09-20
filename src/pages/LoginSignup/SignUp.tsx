@@ -1,35 +1,54 @@
-import React from "react";
+import * as React from "react";
 import TextField from "../../component/atom/TextField/TextField";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import { initialSignupState } from "../../interface/LoginSignup";
-// import Button from "../../component/atom/Button";
+import { SignUp, initialSignupState } from "../../interface/LoginSignup";
+
 import { useCreateUserMutation } from "../../services/user";
 import { Button } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../store/Hooks";
+import { PATH } from "../../Routes/PATH";
 
 export default function SignUpPage() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const [createUser, { isLoading }] = useCreateUserMutation();
 
   const validationSchema = Yup.object({
     name: Yup.string().min(2, "Name must contain at least 2 character").required("Name is required"),
     email: Yup.string().required("Email is required"),
-    phone: Yup.string().required("Phone is required"),
-    password: Yup.string().min(4, "Password must contain at least 4 character").required("Password is Required"),
+    phoneNumber: Yup.string().required("Phone is required"),
+    enterPassword: Yup.string().min(4, "Password must contain at least 4 character").required("Password is Required"),
     confirmPassword: Yup.string().min(4, "Password must contain at least 4 character").required("Password is Required"),
   });
 
-  const formik = useFormik({
+  const formik = useFormik<SignUp>({
     initialValues: initialSignupState,
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await createUser(values);
-        console.log(response);
+        await createUser({
+          ...values,
+          phoneNumber: `+977${values.phoneNumber}`,
+        });
 
-        console.log(values);
-      } catch (e) {
+        formik.resetForm();
+        navigate(PATH.LOGIN.ROOT);
+      } catch (e: any) {
         console.log(e);
+        if (e.status === 302) {
+          formik.setErrors({
+            email: e.data.message,
+          });
+        } else if (e.status === 400) {
+          formik.setErrors({
+            phoneNumber: e.data.message,
+          });
+        }
       }
     },
   });
@@ -74,12 +93,12 @@ export default function SignUpPage() {
             />
             <TextField
               label="New Password"
-              name="password"
+              name="enterPassword"
               placeholder="Enter New Password"
-              value={formik.values.password}
+              value={formik.values.enterPassword}
               onChange={formik.handleChange}
-              error={formik.touched.password && !!formik.errors.password}
-              helperText={formik.touched.password && formik.errors.password}
+              error={formik.touched.enterPassword && !!formik.errors.enterPassword}
+              helperText={formik.touched.enterPassword && formik.errors.enterPassword}
               inputType="password"
             />
             <TextField
@@ -95,7 +114,7 @@ export default function SignUpPage() {
             {/* <Button variant="contained" type="submit" value="Sign Up" onClick={formik.handleSubmit} isDisabled={!formik.dirty} /> */}
 
             <Button disabled={!formik.dirty} variant="contained" color="primary" onClick={() => formik.handleSubmit()}>
-              Sign Up
+              {isLoading ? <CircularProgress /> : "Sign Up"}
             </Button>
           </div>
         </div>

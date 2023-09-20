@@ -3,8 +3,12 @@ import { Navigate, Route, Routes, BrowserRouter } from "react-router-dom";
 import LoginPage from "../pages/LoginSignup/Login";
 import SignUpPage from "../pages/LoginSignup/SignUp";
 import Dashboard from "../pages/Dashboard";
+import Private from "./Private";
+import { useAppSelector } from "../store/Hooks";
 
 export default function RoutesCollection(): JSX.Element {
+  // const token = useAppSelector((state) => state.token.accessToken);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -13,7 +17,14 @@ export default function RoutesCollection(): JSX.Element {
 
         <Route path="/" element={<Navigate to="/dashboard" />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/dashboard"
+          element={
+            <Private>
+              <Dashboard />
+            </Private>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

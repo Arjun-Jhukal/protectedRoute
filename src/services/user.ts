@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { SignUp } from "../interface/LoginSignup";
+import { Login, LoginResponse, SignUp, UserResponse } from "../interface/LoginSignup";
 
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -7,14 +7,30 @@ export const userApi = createApi({
     baseUrl: `http://localhost:8081`,
   }),
   endpoints: (builder) => ({
-    createUser: builder.mutation<object, SignUp>({
-      query: (payload) => ({
+    createUser: builder.mutation<string, SignUp>({
+      query: (values) => ({
         url: "http://localhost:8081/usersWithoutAuth/signUpUser",
         method: "POST",
-        body: payload,
+        body: values,
+      }),
+    }),
+    login: builder.mutation<LoginResponse, Login>({
+      query: (values) => ({
+        url: `http://localhost:8081/login`,
+        method: "POST",
+        body: values,
+      }),
+    }),
+    getLoginUser: builder.query<UserResponse, string>({
+      query: (token) => ({
+        url: `http://localhost:8081/usersWithAuth/getLoginUserInfo`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
     }),
   }),
 });
 
-export const { useCreateUserMutation } = userApi;
+export const { useCreateUserMutation, useLoginMutation, useGetLoginUserQuery } = userApi;
